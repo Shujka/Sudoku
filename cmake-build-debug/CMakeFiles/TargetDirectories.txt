@@ -1,0 +1,5 @@
+/home/darina/CLionProjects/sudoku/main_variant/cmake-build-debug/CMakeFiles/main_variant.dir
+/home/darina/CLionProjects/sudoku/main_variant/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/darina/CLionProjects/sudoku/main_variant/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/darina/CLionProjects/sudoku/main_variant/cmake-build-debug/CMakeFiles/main_variant_autogen_timestamp_deps.dir
+/home/darina/CLionProjects/sudoku/main_variant/cmake-build-debug/CMakeFiles/main_variant_autogen.dir
