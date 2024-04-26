@@ -10,12 +10,14 @@ SudokuField::SudokuField() {
     answer = new int*[9];
     check = new int*[9];
     chechers_answer = new int*[9];
+    candidates = new int*[9];
     for(int i = 0; i < 9; i ++)
     {
         field[i] = new int [9];
         answer[i] = new int [9];
         check[i] = new int [9];
         chechers_answer[i] = new int[9];
+        candidates[i] = new int[9];
     }
 }
 
@@ -489,9 +491,9 @@ int SudokuField::GetDifficulty() {
         {
             if(check[i][j] != 0)
                 continue;
-            if(candidates[i][j].size() < min_value)
+            if(__builtin_popcount(candidates[i][j]) < min_value)
             {
-                min_value = candidates[i][j].size();
+                min_value = __builtin_popcount(candidates[i][j]);
                 position = {i, j};
             }
         }
@@ -503,9 +505,11 @@ int SudokuField::GetDifficulty() {
     }
     int t = -1;
     all_sum += ((min_value - 1) * (min_value - 1));
-    for(auto value: candidates[position.first][position.second])
+    for(int i = 1; i <= 9; i ++)
     {
-        check[position.first][position.second] = value;
+        if((candidates[position.first][position.second] >> i) == 0)
+            continue;
+        check[position.first][position.second] = i;
         checking_empty_cells --;
         FillCrossCandidates(position.first, position.second);
         t = std::max(GetDifficulty(), t);
@@ -652,16 +656,16 @@ void SudokuField::FillAllCandidates() {
     {
         for(int j = 0; j < 9; j ++)
         {
-            candidates[i][j].clear();
+            candidates[i][j] = 0;
             if(check[i][j] != 0)
-                candidates[i][j].push_back(check[i][j]);
+                candidates[i][j] += (1 << check[i][j]);
             else
             {
                 for(int value = 1; value <= 9; value ++)
                 {
                     check[i][j] = value;
                     if(IsValid(i, j))
-                        candidates[i][j].push_back(value);
+                        candidates[i][j] += (1 << value);
                 }
                 check[i][j] = 0;
             }
@@ -670,8 +674,8 @@ void SudokuField::FillAllCandidates() {
 }
 
 void SudokuField::FillCrossCandidates(int i, int j) {
-    candidates[i][j].clear();
-    candidates[i][j].push_back(check[i][j]);
+    candidates[i][j] = 0;
+    candidates[i][j] = (1 << check[i][j]);
     for(int x = 0; x < 9; x ++)
     {
         if(x == i)
@@ -680,12 +684,12 @@ void SudokuField::FillCrossCandidates(int i, int j) {
         {
             continue;
         }
-        candidates[x][j].clear();
+        candidates[x][j] = 0;
         for(int value = 1; value <= 9; value ++)
         {
             check[x][j] = value;
             if(IsValid(x, j))
-                candidates[x][j].push_back(value);
+                candidates[x][j] += (1 << value);
         }
         check[x][j] = 0;
     }
@@ -697,12 +701,12 @@ void SudokuField::FillCrossCandidates(int i, int j) {
         {
             continue;
         }
-        candidates[i][y].clear();
+        candidates[i][y] = 0;
         for(int value = 1; value <= 9; value ++)
         {
             check[i][y] = value;
             if(IsValid(i, y))
-                candidates[i][y].push_back(value);
+                candidates[i][y] += (1 << value);
         }
         check[i][y] = 0;
     }
@@ -719,7 +723,7 @@ void SudokuField::FillCrossCandidates(int i, int j) {
             {
                 check[x][y] = value;
                 if(IsValid(x, y))
-                    candidates[x][y].push_back(value);
+                    candidates[x][y] += (1 << value);
             }
             check[x][y] = 0;
         }
@@ -741,7 +745,7 @@ int SudokuField::GiveHint() {
     {
         for(int j = 0; j < 9; j ++)
         {
-            if(candidates[i][j].size() == 1 && field[i][j] == 0)
+            if(__builtin_popcount(candidates[i][j]) == 1 && field[i][j] == 0)
             {
                 return 1;
             }

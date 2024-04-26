@@ -42,12 +42,12 @@ private:
     int** check;
     int** answer;
     int** chechers_answer;
+    int** candidates;
     int empty_cells = 0;
     int checking_empty_cells = 0;
     bool already_unique = 0;
     int all_sum = 0;
     const int random_number = 100;
-    QVector<int> candidates[9][9];
 
 };
 

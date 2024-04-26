@@ -43,3 +43,10 @@
 0	6	1714074635816931553	/home/darina/CLionProjects/sudoku/main_variant/cmake-build-debug/main_variant_autogen/mocs_compilation.cpp	fe20a1749e9aab58
 6	1235	1714074637044957634	CMakeFiles/main_variant.dir/main.cpp.o	27499e85490a569a
 1235	1510	1714074637320963498	main_variant	eebab371e418326c
+1	9	1714153400334455899	main_variant_autogen/timestamp	fe20a1749e9aab58
+1	9	1714153400334455899	main_variant_autogen/mocs_compilation.cpp	fe20a1749e9aab58
+1	9	1714153400334455899	/home/darina/CLionProjects/sudoku/main_variant/cmake-build-debug/main_variant_autogen/timestamp	fe20a1749e9aab58
+1	9	1714153400334455899	/home/darina/CLionProjects/sudoku/main_variant/cmake-build-debug/main_variant_autogen/mocs_compilation.cpp	fe20a1749e9aab58
+9	860	1714153401182466474	CMakeFiles/main_variant.dir/SudokuField/SudokuField.cpp.o	261a8e685a24915
+9	1397	1714153401718473158	CMakeFiles/main_variant.dir/main.cpp.o	27499e85490a569a
+1397	1673	1714153401994476599	main_variant	eebab371e418326c
