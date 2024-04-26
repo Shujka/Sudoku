@@ -23,7 +23,7 @@ void SudokuField::SimpleBaseGenerate() {
    // srand(time(0));
     int* line = new int[9] {1, 2, 3, 4, 5, 6, 7, 8, 9};
     int* start_positions = new int [9] {0, 3, 6, 1, 4, 7, 2, 5, 8};
-    for(int i = 0; i < 100; i ++)
+    for(int i = 0; i < random_number; i ++)
     {
         int x = rand() % 9;
         int y = rand() % 9;
@@ -42,7 +42,7 @@ void SudokuField::SimpleBaseGenerate() {
 }
 
 void SudokuField::RandomBaseGenerate() {
-    std::cout << "random base generate\n";
+    //std::cout << "random base generate\n";
     srand(time(0));
     int* used_cells = new int [9] {1, 2, 3, 4, 5, 6, 7, 8, 9};
     int* cell_2 = new int [9] {0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -117,7 +117,7 @@ void SudokuField::RandomBaseGenerate() {
         both[pos_3] = i;
         pos_3 ++;
     }
-    for(int i = 0; i < 20; i ++)
+    for(int i = 0; i < random_number / 5; i ++)
     {
         int x, y;
         if(pos_3 != 0) {
@@ -163,7 +163,7 @@ void SudokuField::RandomBaseGenerate() {
             continue;
         }
     }
-    for(int i = 0; i < 20; i ++)
+    for(int i = 0; i < random_number / 5; i ++)
     {
         int x;
         int y;
@@ -198,7 +198,7 @@ void SudokuField::RandomBaseGenerate() {
         }
     }
 
-    for(int i = 0; i < 20; i ++)
+    for(int i = 0; i < random_number / 5; i ++)
     {
         int x;
         int y;
@@ -305,6 +305,7 @@ void SudokuField::SimpleLevelGenerate() {
             answer[i][j] = field[i][j];
         }
     }
+
     for(int t = 0; t < 30; t ++)
     {
         int i = rand() % 9, j = rand() % 9;
@@ -406,7 +407,6 @@ void SudokuField::DifficultLevelGenerate(int min_difficulty, int max_difficulty)
     //freopen("output.txt", "w", stdout);
     RandomBaseGenerate();
     empty_cells = 81-27;
-    bool already_unique = 0;
     int current_difficulty = 5000;
     //for(int i = 0; i < 500; i ++)
     while(current_difficulty < min_difficulty || current_difficulty > max_difficulty)
@@ -735,8 +735,8 @@ bool SudokuField::TryFill(int row, int column, int number) {
 }
 
 int SudokuField::GiveHint() {
-    // obvious single
     FillAllCandidates();
+    // obvious single
     for(int i = 0; i < 9; i ++)
     {
         for(int j = 0; j < 9; j ++)
