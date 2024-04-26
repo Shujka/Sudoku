@@ -22,7 +22,7 @@ SudokuField::SudokuField() {
 }
 
 void SudokuField::SimpleBaseGenerate() {
-   // srand(time(0));
+    // srand(time(0));
     int* line = new int[9] {1, 2, 3, 4, 5, 6, 7, 8, 9};
     int* start_positions = new int [9] {0, 3, 6, 1, 4, 7, 2, 5, 8};
     for(int i = 0; i < random_number; i ++)
@@ -413,7 +413,7 @@ void SudokuField::DifficultLevelGenerate(int min_difficulty, int max_difficulty)
     //for(int i = 0; i < 500; i ++)
     while(current_difficulty < min_difficulty || current_difficulty > max_difficulty)
     {
-       // std::cout << "ok generate in " << i << " time\n";
+        // std::cout << "ok generate in " << i << " time\n";
         checking_empty_cells = empty_cells;
         if(rand() % 4)
         {
@@ -507,7 +507,7 @@ int SudokuField::GetDifficulty() {
     all_sum += ((min_value - 1) * (min_value - 1));
     for(int i = 1; i <= 9; i ++)
     {
-        if((candidates[position.first][position.second] >> i) == 0)
+        if(((candidates[position.first][position.second] >> i) & 1) == 0)
             continue;
         check[position.first][position.second] = i;
         checking_empty_cells --;
@@ -762,6 +762,3 @@ QString SudokuField::GetHint() {
     }
     return "brute";
 }
-
-
-
