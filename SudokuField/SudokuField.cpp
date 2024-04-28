@@ -214,7 +214,6 @@ void SudokuField::RandomBaseGenerate() {
         }
     }
     checking_empty_cells = 81 - 27;
-    std::cout << empty_cell.size() << " " << not_empty_cell.size() << '\n';
     FillAllCandidates();
     FillCheck();
     FillAnswerGrid();
@@ -228,9 +227,7 @@ void SudokuField::RandomBaseGenerate() {
             not_empty_cell.push_back(i * 10 + j);
             state_of_cell[i][j] = 1;
         }
-        std::cout << '\n';
     }
-    std::cout << "done" << '\n';
     delete[] used_cells;
     delete[] cell_2;
     delete[] cell_3;
@@ -918,40 +915,6 @@ void SudokuField::FillCrossCandidates(int i, int j) {
             }
             check[x][y] = 0;
         }
-    }
-}
-
-// for interaction
-bool SudokuField::TryFill(int row, int column, int number) {
-    if (answer[row - 1][column - 1] == number) {
-        field[row - 1][column - 1] = number;
-        return true;
-    }
-    return false;
-}
-
-// for hints
-int SudokuField::GiveHint() {
-    FillAllCandidates();
-    // obvious single
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
-            if (__builtin_popcount(candidates[i][j]) == 1 && field[i][j] == 0) {
-                return 1;
-            }
-        }
-    }
-    return 0;
-}
-
-// for hints
-QString SudokuField::GetHint() {
-    int type = GiveHint();
-    switch (type) {
-        case 1:
-            return "Single one";
-        default:
-            return "brute";
     }
 }
 

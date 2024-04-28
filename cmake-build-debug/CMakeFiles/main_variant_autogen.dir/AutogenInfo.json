@@ -80,6 +80,12 @@
 	"HEADERS" : 
 	[
 		[
+			"/home/darina/CLionProjects/sudoku/main_variant/SudokuField/PlayersField.h",
+			"MU",
+			"ECVZNV3UU7/moc_PlayersField.cpp",
+			null
+		],
+		[
 			"/home/darina/CLionProjects/sudoku/main_variant/SudokuField/SudokuField.h",
 			"MU",
 			"ECVZNV3UU7/moc_SudokuField.cpp",
@@ -136,6 +142,11 @@
 	"SETTINGS_FILE" : "/home/darina/CLionProjects/sudoku/main_variant/cmake-build-debug/CMakeFiles/main_variant_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[
+			"/home/darina/CLionProjects/sudoku/main_variant/SudokuField/PlayersField.cpp",
+			"MU",
+			null
+		],
 		[
 			"/home/darina/CLionProjects/sudoku/main_variant/SudokuField/SudokuField.cpp",
 			"MU",

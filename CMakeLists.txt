@@ -15,7 +15,9 @@ find_package(Qt5 COMPONENTS
 
 add_executable(main_variant main.cpp
         SudokuField/SudokuField.cpp
-        SudokuField/SudokuField.h)
+        SudokuField/SudokuField.h
+        SudokuField/PlayersField.cpp
+        SudokuField/PlayersField.h)
 target_link_libraries(main_variant
         Qt5::Core
         Qt5::Gui
