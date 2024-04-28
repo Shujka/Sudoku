@@ -199,7 +199,6 @@ void SudokuField::RandomBaseGenerate() {
     }
 
 
-    /// TODO
     // Provide final grid
     // add vector of empty cells and not empty cells
     for (int i = 0; i < 3; i++) {
