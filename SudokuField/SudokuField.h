@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <QVector>
+#include <vector>
 
 class SudokuField {
 public:
@@ -32,22 +33,25 @@ private:
     void FillAnswer();
     void FillCheck();
     void FillAllCandidates();
+    bool FillAnswerGrid();
     void FillCrossCandidates(int i, int j);
-    void OptimisedIsSolvable();
     void RandomBaseGenerate();
     void SimpleBaseGenerate();
-    void TryAddCell();
-    void TryDeleteCell();
+    bool TryAddCell();
+    bool TryDeleteCell();
     int** field;
     int** check;
     int** answer;
     int** chechers_answer;
     int** candidates;
+    int** state_of_cell;
     int empty_cells = 0;
     int checking_empty_cells = 0;
+    int field_difficulty = 0;
     bool already_unique = 0;
     int all_sum = 0;
     const int random_number = 100;
+    std::vector<int> empty_cell, not_empty_cell;
 
 };
 
