@@ -2,6 +2,8 @@
 #include <QApplication>
 #include <QPushButton>
 
+#include "mainwindow/mainwindow.h"
+
 #include "SudokuField/SudokuField.h"
 #include "SudokuField/PlayersField.h"
 #include <iostream>
@@ -34,64 +36,10 @@
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    int** arr = new int*[9];
-    auto f = new SudokuField();
-    arr[0] = new int [9] {9,0,0,0,0,2,0,0,5};
-    arr[1] = new int [9] {0,5,1,0,0,7,4,0,0};
-    arr[2] = new int [9] {0,4,7,6,0,0,0,8,1};
-    arr[3] = new int [9] {0,0,0,0,0,6,0,0,0};
-    arr[4] = new int [9] {0,0,6,0,2,0,8,0,0};
-    arr[5] = new int [9] {7,0,0,0,8,0,0,1,3};
-    arr[6] = new int [9] {4,0,0,7,0,9,5,0,8};
-    arr[7] = new int [9] {1,0,0,0,0,5,0,0,0};
-    arr[8] = new int [9] {6,0,0,0,0,0,1,9,2};
-    std::cout << f->CalculateDifficulty(arr) << '\n';
 
-    auto k = new PlayersField(1, 300, 2000);
-    auto tt = k->GetSudokuField();
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
-            std::cout << tt[i][j];
-        }
-        std::cout << '\n';
-    }
-    tt = k->GetSudokuFieldAnswer();
-    for (int i = 0; i < 9; i++) {
-        for(int j = 0; j < 9; j++) {
-            std::cout << tt[i][j];
-        }
-        std::cout << '\n';
-    }
+    mainwindow w;
+    w.setWindowState(Qt::WindowFullScreen);
+    w.show();
 
-    for (int i = 0; i < 1; i++) {
-        for (int j = 0; j < 3; j++) {
-            for (int value = 1; value <= 9; value++) {
-                std::cout << i << " " << j << " " << value << '\n';
-                bool t = k->TryAdd(i, j, value);
-                std::cout << "try add to " << i + 1 << " " << j + 1 << " value " << value << " is " << t << '\n';
-            }
-            std::cout << "candidates for " << i + 1 << " " << j + 1 << " : ";
-            k->ShowCell(i, j);
-        }
-    }
-
-    k->SetPencil();
-
-    for (int i = 0; i < 1; i++) {
-        for (int j = 0; j < 3; j++) {
-            for (int value = 1; value <= 9; value++) {
-                bool t = k->TryAdd(i, j, value);
-                std::cout << "try add to " << i + 1 << " " << j + 1 << " value " << value << " is " << t << '\n';
-            }
-            std::cout << "candidates for " << i + 1 << " " << j + 1 << " : ";
-            k->ShowCell(i, j);
-        }
-    }
-
-    for (int i = 0; i < 9; i++) {
-        delete[] arr[i];
-    }
-    delete[] arr;
-    exit(0);
     return QApplication::exec();
 }

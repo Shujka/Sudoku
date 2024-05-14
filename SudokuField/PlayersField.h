@@ -11,13 +11,23 @@ class PlayersField : public SudokuField {
 public:
     PlayersField (int type, int min_difficulty, int max_difficulty);
     void SetPencil();
-    bool TryAdd(int row, int column, int number);
+    int TryAdd(int row, int column, int number);
     void ShowCell(int row, int column);
+    int** GetNotes();
+    void GetFastNotes();
+    void SetCell(int row, int column, int value);
+    void SetNotes(int row, int column);
+    int GetNote(int row, int column);
+    int GetSimpleHint();
+    int GetEmptyCellsNumber();
+    void show_field();
 
 private:
     void FillBaseNotes();
     int** notes;
+    int** players_notes;
     bool pencil = false;
+
 };
 
 

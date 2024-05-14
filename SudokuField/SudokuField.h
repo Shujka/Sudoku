@@ -39,6 +39,9 @@ private:
     bool already_unique = 0;
     int all_sum = 0;
     const int random_number = 100;
+    const int number_do_random = 3;
+    const int number_left_min = 1;
+    int bad_get = 0;
     std::vector<int> empty_cell, not_empty_cell;
 
 protected:

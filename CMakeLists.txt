@@ -17,7 +17,11 @@ add_executable(main_variant main.cpp
         SudokuField/SudokuField.cpp
         SudokuField/SudokuField.h
         SudokuField/PlayersField.cpp
-        SudokuField/PlayersField.h)
+        SudokuField/PlayersField.h
+        mainwindow/mainwindow.cpp
+        mainwindow/mainwindow.h
+        mainwindow/mainwindow.ui
+)
 target_link_libraries(main_variant
         Qt5::Core
         Qt5::Gui

@@ -90,6 +90,12 @@
 			"MU",
 			"ECVZNV3UU7/moc_SudokuField.cpp",
 			null
+		],
+		[
+			"/home/darina/CLionProjects/sudoku/main_variant/mainwindow/mainwindow.h",
+			"MU",
+			"MIKB3U5ZOU/moc_mainwindow.cpp",
+			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -152,7 +158,12 @@
 			"MU",
 			null
 		],
-		[ "/home/darina/CLionProjects/sudoku/main_variant/main.cpp", "MU", null ]
+		[ "/home/darina/CLionProjects/sudoku/main_variant/main.cpp", "MU", null ],
+		[
+			"/home/darina/CLionProjects/sudoku/main_variant/mainwindow/mainwindow.cpp",
+			"MU",
+			null
+		]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

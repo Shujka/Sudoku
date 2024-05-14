@@ -45,7 +45,7 @@ void SudokuField::SimpleBaseGenerate() {
 // completely done
 void SudokuField::RandomBaseGenerate() {
     //std::cout << "random base generate\n";
-    srand(time(nullptr));
+    //srand(time(nullptr));
     int *used_cells = new int[9]{1, 2, 3, 4, 5, 6, 7, 8, 9};
     int *cell_2 = new int[9]{0, 0, 0, 0, 0, 0, 0, 0, 0};
     int *cell_3 = new int[9]{0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -215,7 +215,6 @@ void SudokuField::RandomBaseGenerate() {
     }
     checking_empty_cells = 81 - 27;
     FillAllCandidates();
-    FillCheck();
     FillAnswerGrid();
     FillCheck();
 
@@ -249,6 +248,7 @@ int **SudokuField::GetSudokuFieldAnswer() {
 
 // completely done
 void SudokuField::SimpleLevelGenerate() {
+    srand(time(nullptr));
     SimpleBaseGenerate();
     for (int t = 0; t < 500; t++) {
         int type = rand() % 4;
@@ -300,25 +300,16 @@ void SudokuField::SimpleLevelGenerate() {
         }
     }
 
-    for (int t = 0; t < 30; t++) {
+    for (int t = 0; t < 50; t++) {
         int i = rand() % 9, j = rand() % 9;
-        bool can = false;
+        int can = 0;
         if (field[i][j] != 0) {
             field[i][j] = 0;
-            for (int new_value = 1; new_value <= 9 && can == 0; new_value++) {
-                if (new_value != answer[i][j]) {
-                    FillCheck();
-                    field[i][j] = new_value;
-                    check[i][j] = new_value;
-                    if (IsValid(i, j)) {
-                        checking_empty_cells = empty_cells;
-                        bool result = IsSolvable();
-                        can = std::max(result, can);
-                    }
-                }
-            }
+            FillAllCandidates();
+            int result = IsSolvable();
+            can = std::max(can, result);
         }
-        if (can) {
+        if (can > 1) {
             field[i][j] = answer[i][j];
         } else {
             empty_cells++;
@@ -347,20 +338,50 @@ bool SudokuField::IsValid(int i, int j) {
 }
 
 // completely done
-// optimised
 int SudokuField::IsSolvable() {
     if (checking_empty_cells == 0) {
         return 1;
     }
+    //std::cout << checking_empty_cells << "|";
+    /*for(int i = 0; i < 9; i ++)
+    {
+        for(int j = 0; j < 9; j ++)
+        {
+            if(check[i][j] == 0)
+            {
+
+                int t = 0;
+                for(int value = 1; value <= 9; value ++)
+                {
+                    check[i][j] = value;
+                    if(IsValid(i, j))
+                    {
+                        checking_empty_cells --;
+                        t += IsSolvable();
+                        checking_empty_cells ++;
+                    }
+                    check[i][j] = 0;
+                    if(t > 1)
+                        return t;
+                }
+                return t;
+            }
+        }
+    }
+
+    exit(0);*/
 
     int min_value = 10;
     std::pair<int, int> position;
 
     // search for cell with minimum possible candidates
+
+//    std::cout<<"candidates:"<<' '<<checking_empty_cells<<std::endl;
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (check[i][j] != 0)
                 continue;
+//            std::cout<<i<<' '<<j<<' '<<candidates[i][j]<<' '<<__builtin_popcount(candidates[i][j])<<std::endl;
             if (__builtin_popcount(candidates[i][j]) < min_value) {
                 min_value = __builtin_popcount(candidates[i][j]);
                 position = {i, j};
@@ -369,7 +390,7 @@ int SudokuField::IsSolvable() {
     }
 
     // search for value that occupy minimum cells in columns
-    int number_in_column = 0, column = 0, amount_in_column = 10;
+    /*int number_in_column = 0, column = 0, amount_in_column = 10;
     for (int value = 1; value <= 9; value++) {
         for (int j = 0; j < 9; j++) {
             int current_amount = 0;
@@ -425,25 +446,22 @@ int SudokuField::IsSolvable() {
             }
         }
     }
-
+*/
     if (min_value == 0) {
-        //    std::cout << "unsolvable\n";
-        // unsolvable
-        return -1;
+
+     //   std::cout << ":)\n";
+        return 0;
     }
 
-//    std::cout << min_value << " " << amount_in_column << " " << amount_in_row << " " << amount_in_square << checking_empty_cells << " " << '\n';
-
-    if (min_value <= amount_in_column && min_value <= amount_in_row && min_value <= amount_in_square) {
+   // if (min_value <= amount_in_column && min_value <= amount_in_row && min_value <= amount_in_square) {
         int t = 0;
-        //   std::cout << "good position\n";
         for (int i = 1; i <= 9; i++) {
-            if (((candidates[position.first][position.second] >> i) & 1) == 0)
+            if (((candidates[position.first][position.second]) & (1 << i)) == 0)
                 continue;
+//            std::cout<<"good boy: "<<position.first<<' '<<position.second<<' '<<i<<std::endl;
             check[position.first][position.second] = i;
             checking_empty_cells--;
             FillCrossCandidates(position.first, position.second);
-            //     std::cout << "ok check position " << position.first + 1 << " " << position.second + 1 << " with value " << i << '\n';
             t += IsSolvable();
             checking_empty_cells++;
             check[position.first][position.second] = 0;
@@ -452,16 +470,15 @@ int SudokuField::IsSolvable() {
                 return t;
         }
         return t;
-    }
+/*    }
+
     if (amount_in_row <= amount_in_square && amount_in_row <= amount_in_column) {
         int t = 0;
-        //   std::cout << "good row\n";
         for (int j = 0; j < 9; j++) {
             if (((candidates[row][j] >> number_in_row) & 1) && check[row][j] == 0) {
                 check[row][j] = number_in_row;
                 checking_empty_cells--;
                 FillCrossCandidates(row, j);
-                //       std::cout << "ok check row " << row + 1 << " " << j+ 1 << " with value " << number_in_row << '\n';
                 t += IsSolvable();
                 checking_empty_cells++;
                 check[row][j] = 0;
@@ -472,15 +489,14 @@ int SudokuField::IsSolvable() {
         }
         return t;
     }
+
     if (amount_in_column <= amount_in_square) {
-        //   std::cout << "good column\n";
         int t = 0;
         for (int i = 0; i < 9; i++) {
             if (((candidates[i][column] >> number_in_column) & 1) && check[i][column] == 0) {
                 check[i][column] = number_in_column;
                 checking_empty_cells--;
                 FillCrossCandidates(i, column);
-                //     std::cout << "ok check column " << i + 1 << " " << column + 1 << " with value " << number_in_column << '\n';
                 t += IsSolvable();
                 checking_empty_cells++;
                 check[i][column] = 0;
@@ -489,10 +505,11 @@ int SudokuField::IsSolvable() {
                     return t;
             }
         }
+ //       std::cout << t << std::endl;
         return t;
     }
+
     int t = 0;
-    //std::cout << "good square\n";
     for (int i = square / 10; i < square / 10 + 3; i++) {
         for (int j = square % 10; j < square % 10 + 3; j++) {
             if (check[i][j] != 0)
@@ -501,24 +518,26 @@ int SudokuField::IsSolvable() {
                 check[i][j] = number_in_square;
                 checking_empty_cells--;
                 FillCrossCandidates(i, j);
-                //      std::cout << "ok check square " << i + 1 << " " << j + 1 << " with value " << number_in_square << '\n';
                 t += IsSolvable();
                 checking_empty_cells++;
                 check[i][j] = 0;
                 FillCrossCandidates(i, j);
                 if (t > 1)
-                    return t;
+                    return 2;
             }
         }
     }
-    return t;
+    return t;*/
+    std::cout << "loh" << std::endl;
 }
 
 // completely done
 void SudokuField::DifficultLevelGenerate(int min_difficulty, int max_difficulty) {
 
+    std::cout << "min " << min_difficulty << " " << max_difficulty << '\n';
     srand(time(nullptr));
     RandomBaseGenerate();
+
     empty_cells = 0;
     int remember_difficulty = 0;
     int **remember = new int *[9];
@@ -529,29 +548,32 @@ void SudokuField::DifficultLevelGenerate(int min_difficulty, int max_difficulty)
         }
     }
 
-    for (int i = 0; i < 200; i++) {
-        for (int j = 0; j < 6; j++) {
-            if (rand() % 2) {
-                bool t = TryAddCell();
-                if (t) {
-                    empty_cells--;
-                }
-            } else {
-                bool t = TryDeleteCell();
-                if (t)
-                    empty_cells++;
-            }
-        }
-        FillCheck();
+    for (int i = 0; i < 2000; i++) {
+          //  std::cout << " i = " << i << " " << empty_cells << " " << empty_cell.size() + not_empty_cell.size() << " "
+          //           << '\n';
+        std::cout << "i = " << i << '\n';
         FillAllCandidates();
-        int k = IsSolvable();
+        int k;
+        if (empty_cells > 81 - 17)
+            k = 2;
+        else
+            k = IsSolvable();
+
+        std::cout << "is solvable = " << k << '\n';
+
         if (k == 1) {
-            FillCheck();
             FillAllCandidates();
             int c = CalculateDifficulty();
             std::cout << "generated with difficulty " << c << '\n';
+            std::cout<<"field: "<<std::endl;
+            for(int x = 0; x < 9; x++){
+                for(int y = 0; y < 9; y++){
+                    std::cout<<field[x][y]<<' ';
+                }
+                std::cout<<std::endl;
+            }
 
-            if (c > remember_difficulty) {
+            if (c > remember_difficulty || (c >= min_difficulty && c <= max_difficulty)) {
                 remember_difficulty = c;
                 for (int i2 = 0; i2 < 9; i2++) {
                     for (int j = 0; j < 9; j++) {
@@ -577,17 +599,20 @@ void SudokuField::DifficultLevelGenerate(int min_difficulty, int max_difficulty)
             if (remember_difficulty >= min_difficulty && remember_difficulty <= max_difficulty) {
                 goto ttt;
             }
-        }
-        for (int j = 0; j < random_number / 5; j++) {
-            if (rand() % 2) {
-                bool t = TryAddCell();
-                if (t) {
+            //int random_number_delete = rand() % 15;
+            //for (int j = 0; j < random_number_delete; j++) {
+            if (TryDeleteCell())
+                empty_cells++;
+            //}
+        } else {
+            FillAllCandidates();
+            int try_add_number = rand() % 3 + 1;
+            for(int j = 0; j < try_add_number; j ++)
+            {
+                if (TryAddCell()) {
                     empty_cells--;
+                    FillAllCandidates();
                 }
-            } else {
-                bool t = TryDeleteCell();
-                if (t)
-                    empty_cells++;
             }
         }
     }
@@ -597,7 +622,7 @@ void SudokuField::DifficultLevelGenerate(int min_difficulty, int max_difficulty)
             field[i][j] = remember[i][j];
         }
     }
-
+    std::cout << "finally " << remember_difficulty << '\n';
     for (int i = 0; i < 9; i++) {
         delete[] remember[i];
     }
@@ -615,11 +640,14 @@ void SudokuField::FillAnswer() {
 }
 
 // completely done
-// work with field
+// work with playersfield
 void SudokuField::FillCheck() {
+    checking_empty_cells = 0;
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             check[i][j] = field[i][j];
+            if(check[i][j] == 0)
+                checking_empty_cells ++;
         }
     }
 }
@@ -628,7 +656,15 @@ void SudokuField::FillCheck() {
 int SudokuField::GetDifficulty() {
 
     if (checking_empty_cells == 0) {
+        for(int i = 0; i < 9; i ++)
+        {
+            for(int j = 0; j < 9; j ++)
+            {
+                answer[i][j] = check[i][j];
+            }
+        }
         return 0;
+
     }
 
     int min_value = 10;
@@ -706,7 +742,7 @@ int SudokuField::GetDifficulty() {
 
     if (min_value == 0) {
         // unsolvable
-        return -1;
+        return 0;
     }
 
     if (min_value <= amount_in_column && min_value <= amount_in_row && min_value <= amount_in_square) {
@@ -789,8 +825,22 @@ bool SudokuField::TryAddCell() {
     int x = position / 10, y = position % 10;
     field[x][y] = answer[x][y];
     check[x][y] = answer[x][y];
-    empty_cell.erase(std::find(empty_cell.begin(), empty_cell.end(), x * 10 + y));
-    not_empty_cell.push_back(x * 10 + y);
+    empty_cell.clear();
+    not_empty_cell.clear();
+    for(int i = 0; i < 9; i ++)
+    {
+        for(int j = 0; j < 9; j ++)
+        {
+            if(field[i][j])
+            {
+                not_empty_cell.push_back(i * 10 + j);
+            }
+            else
+            {
+                empty_cell.push_back(i * 10 + j);
+            }
+        }
+    }
     return true;
 }
 
@@ -802,14 +852,30 @@ bool SudokuField::TryDeleteCell() {
     int x = position / 10, y = position % 10;
     field[x][y] = 0;
     check[x][y] = 0;
+    empty_cell.clear();
+    not_empty_cell.clear();
+    for(int i = 0; i < 9; i ++)
+    {
+        for(int j = 0; j < 9; j ++)
+        {
+            if(field[i][j])
+            {
+                not_empty_cell.push_back(i * 10 + j);
+            }
+            else
+            {
+                empty_cell.push_back(i * 10 + j);
+            }
+        }
+    }
+    /*
     not_empty_cell.erase(std::find(not_empty_cell.begin(), not_empty_cell.end(), x * 10 + y));
-    empty_cell.push_back(x * 10 + y);
+    empty_cell.push_back(x * 10 + y);*/
     return true;
 }
 
 // completely done
 int SudokuField::CalculateDifficulty() {
-    FillCheck();
     checking_empty_cells = empty_cells;
     FillAllCandidates();
     all_sum = 0;
@@ -826,22 +892,33 @@ int SudokuField::CalculateDifficulty(int **arr) {
             check[i][j] = arr[i][j];
             if (arr[i][j] == 0)
                 empty_cells++;
-            std::cout << check[i][j];
         }
-        std::cout << '\n';
     }
     checking_empty_cells = empty_cells;
     //std::cout << "empty cells = " << empty_cells << '\n';
-    FillAllCandidates();
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            candidates[i][j] = 0;
+            if (check[i][j] != 0) {
+                candidates[i][j] = (1 << check[i][j]);
+            } else {
+                for (int value = 1; value <= 9; value++) {
+                    check[i][j] = value;
+                    if (IsValid(i, j))
+                        candidates[i][j] += (1 << value);
+                }
+                check[i][j] = 0;
+            }
+        }
+    }
     all_sum = 0;
     GetDifficulty();
-    std::cout << all_sum << " all sum \n";
     return 100 * all_sum + empty_cells;
 }
 
 //completely done
 void SudokuField::FillAllCandidates() {
-    //FillCheck();
+    FillCheck();
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             candidates[i][j] = 0;
@@ -861,6 +938,8 @@ void SudokuField::FillAllCandidates() {
 
 //completely done
 void SudokuField::FillCrossCandidates(int i, int j) {
+    //FillAllCandidates();
+
     candidates[i][j] = 0;
     if (check[i][j] != 0) {
         candidates[i][j] = (1 << check[i][j]);

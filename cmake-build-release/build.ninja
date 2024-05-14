@@ -81,6 +81,14 @@ build CMakeFiles/main_variant.dir/SudokuField/PlayersField.cpp.o: CXX_COMPILER__
   OBJECT_DIR = CMakeFiles/main_variant.dir
   OBJECT_FILE_DIR = CMakeFiles/main_variant.dir/SudokuField
 
+build CMakeFiles/main_variant.dir/mainwindow/mainwindow.cpp.o: CXX_COMPILER__main_variant_unscanned_Release /home/darina/CLionProjects/sudoku/main_variant/mainwindow/mainwindow.cpp || cmake_object_order_depends_target_main_variant
+  DEFINES = -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB
+  DEP_FILE = CMakeFiles/main_variant.dir/mainwindow/mainwindow.cpp.o.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always -fPIC
+  INCLUDES = -isystem /home/darina/CLionProjects/sudoku/main_variant/cmake-build-release/main_variant_autogen/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets
+  OBJECT_DIR = CMakeFiles/main_variant.dir
+  OBJECT_FILE_DIR = CMakeFiles/main_variant.dir/mainwindow
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target main_variant
@@ -89,7 +97,7 @@ build CMakeFiles/main_variant.dir/SudokuField/PlayersField.cpp.o: CXX_COMPILER__
 #############################################
 # Link the executable main_variant
 
-build main_variant: CXX_EXECUTABLE_LINKER__main_variant_Release CMakeFiles/main_variant.dir/main_variant_autogen/mocs_compilation.cpp.o CMakeFiles/main_variant.dir/main.cpp.o CMakeFiles/main_variant.dir/SudokuField/SudokuField.cpp.o CMakeFiles/main_variant.dir/SudokuField/PlayersField.cpp.o | /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.15.10 /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.15.10 /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.15.10 || main_variant_autogen main_variant_autogen_timestamp_deps
+build main_variant: CXX_EXECUTABLE_LINKER__main_variant_Release CMakeFiles/main_variant.dir/main_variant_autogen/mocs_compilation.cpp.o CMakeFiles/main_variant.dir/main.cpp.o CMakeFiles/main_variant.dir/SudokuField/SudokuField.cpp.o CMakeFiles/main_variant.dir/SudokuField/PlayersField.cpp.o CMakeFiles/main_variant.dir/mainwindow/mainwindow.cpp.o | /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.15.10 /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.15.10 /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.15.10 || main_variant_autogen main_variant_autogen_timestamp_deps
   FLAGS = -O3 -DNDEBUG
   LINK_LIBRARIES = /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.15.10  /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.15.10  /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.15.10
   OBJECT_DIR = CMakeFiles/main_variant.dir
@@ -131,7 +139,7 @@ build main_variant_autogen_timestamp_deps: phony CMakeFiles/main_variant_autogen
 #############################################
 # Utility command for main_variant_autogen
 
-build main_variant_autogen: phony CMakeFiles/main_variant_autogen main_variant_autogen/timestamp main_variant_autogen/mocs_compilation.cpp main_variant_autogen_timestamp_deps
+build main_variant_autogen: phony CMakeFiles/main_variant_autogen main_variant_autogen/include/mainwindow/ui_mainwindow.h main_variant_autogen/timestamp main_variant_autogen/mocs_compilation.cpp main_variant_autogen_timestamp_deps
 
 
 #############################################
@@ -147,13 +155,13 @@ build main_variant_autogen/timestamp main_variant_autogen/mocs_compilation.cpp |
 #############################################
 # Phony custom command for CMakeFiles/main_variant_autogen_timestamp_deps
 
-build CMakeFiles/main_variant_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/main_variant_autogen_timestamp_deps: phony /usr/lib/qt5/bin/uic /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.15.10 /usr/lib/qt5/bin/moc /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.15.10 /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.15.10
+build CMakeFiles/main_variant_autogen_timestamp_deps | ${cmake_ninja_workdir}CMakeFiles/main_variant_autogen_timestamp_deps: phony /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.15.10 /usr/lib/qt5/bin/moc /usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.15.10 /usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.15.10 /usr/lib/qt5/bin/uic
 
 
 #############################################
 # Phony custom command for CMakeFiles/main_variant_autogen
 
-build CMakeFiles/main_variant_autogen | ${cmake_ninja_workdir}CMakeFiles/main_variant_autogen: phony main_variant_autogen/timestamp || main_variant_autogen_timestamp_deps
+build CMakeFiles/main_variant_autogen main_variant_autogen/include/mainwindow/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/main_variant_autogen ${cmake_ninja_workdir}main_variant_autogen/include/mainwindow/ui_mainwindow.h: phony main_variant_autogen/timestamp || main_variant_autogen_timestamp_deps
 
 # =============================================================================
 # Target aliases.
