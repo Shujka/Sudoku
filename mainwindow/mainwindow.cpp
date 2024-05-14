@@ -326,6 +326,7 @@ void mainwindow::ShowStartGrid() {
 }
 
 void mainwindow::number_button_clicked(int number) {
+    // to commit
     if (no_mistakes == 0)
         return;
     int value = number + 1;
