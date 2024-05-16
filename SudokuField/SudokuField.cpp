@@ -548,7 +548,7 @@ void SudokuField::DifficultLevelGenerate(int min_difficulty, int max_difficulty)
         }
     }
 
-    for (int i = 0; i < 2000; i++) {
+    for (int i = 0; i < 200000; i++) {
           //  std::cout << " i = " << i << " " << empty_cells << " " << empty_cell.size() + not_empty_cell.size() << " "
           //           << '\n';
         std::cout << "i = " << i << '\n';

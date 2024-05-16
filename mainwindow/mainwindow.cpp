@@ -14,9 +14,18 @@ mainwindow::mainwindow(QWidget *parent) :
     ui->endGameWidget->hide();
     ui->loseGameWidget->hide();
     ui->pauseGameWidget->hide();
-    ui->themeButton->setIcon(QIcon("../Pictures/moon.png"));
-    ui->themeButton->setStyleSheet("background-color:rgba(255, 255, 255, 0);  border: none;");
-    ui->backMoveButton->setEnabled(0);
+    ui->rulesWidget->hide();
+    ui->hintButton->setIcon(QIcon("../Pictures/bulb.png"));
+    ui->cleverHintButton->setIcon(QIcon("../Pictures/bulb.png"));
+    ui->pauseButton->setIcon(QIcon("../Pictures/pause.png"));
+    ui->fastPencilButton->setIcon(QIcon("../Pictures/numbers.png"));
+    ui->backMoveButton->setIcon(QIcon("../Pictures/back.png"));
+    ui->backMoveButton->setStyleSheet("background-color:rgba(0, 0, 255, 50);");
+    ui->fastPencilButton->setStyleSheet("background-color:rgba(0, 0, 255, 50);");
+    ui->changePencilButton->setStyleSheet("background-color:rgba(0, 0, 255, 50);");
+    ui->cleverHintWidget->hide();
+
+    ui->backMoveButton->setEnabled(false);
 
     font32.setPointSize(32);
     font11.setPointSize(11);
@@ -35,12 +44,14 @@ mainwindow::mainwindow(QWidget *parent) :
         field_buttons[i].resize(9);
         for (int j = 0; j < 9; j++) {
             type_of_cell[i][j] = 0;
-            QPushButton *b = new QPushButton(this->ui->gameWidget);
+            auto *b = new QPushButton(this->ui->gameWidget);
             b->resize(70, 70);
             b->move(645 + 70 * j, 200 + 70 * i);
-           // std::cout << i << " " << j << " " << 645 + 70 * i << " " << 300 + 70 * j << '\n';
+            // std::cout << i << " " << j << " " << 645 + 70 * i << " " << 300 + 70 * j << '\n';
             field_buttons[i][j] = b;
-            QString style = "background-color:rgba(255, 255, 255, 0); border-style: solid; border-width: " + GetBorder(i, j) + " border-color: black;";
+            QString style =
+                    "background-color:rgba(255, 255, 255, 0); border-style: solid; border-width: " + GetBorder(i, j) +
+                    " border-color: black;";
             qDebug() << i << " " << j << " " << style;
             //style = "background-color:rgba(255, 255, 255, 0); border-style: solid; border-width: 2px 2px 2px 2px; border-color: black;";
             field_buttons[i][j]->setStyleSheet(style);
@@ -51,8 +62,8 @@ mainwindow::mainwindow(QWidget *parent) :
     }
 
     numbers_buttons.resize(9);
-    for(int i = 0; i < 9; i++) {
-        QPushButton *b = new QPushButton(this->ui->gameWidget);
+    for (int i = 0; i < 9; i++) {
+        auto *b = new QPushButton(this->ui->gameWidget);
         b->resize(50, 50);
         b->move(650 + 70 * i, 880);
         numbers_buttons[i] = b;
@@ -70,11 +81,11 @@ mainwindow::mainwindow(QWidget *parent) :
     connect(ui->exitButton, SIGNAL(clicked(bool)), this, SLOT(close()));
     connect(ui->newGameButton, SIGNAL(clicked(bool)), this, SLOT(start_game_button_clicked()));
     connect(ui->comboBox, SIGNAL(activated(int)), this, SLOT(change_difficulty_button_clicked(int)));
-    connect(ui->themeButton, SIGNAL(clicked(bool)), this, SLOT(change_theme_button_clicked()));
     connect(ui->changePencilButton, SIGNAL(clicked()), this, SLOT(change_pencil_button_clicked()));
     connect(ui->backMoveButton, SIGNAL(clicked()), this, SLOT(back_button_clicked()));
     connect(ui->fastPencilButton, SIGNAL(clicked()), this, SLOT(fast_pencil_button_clicked()));
     connect(ui->hintButton, SIGNAL(clicked()), this, SLOT(simple_hint_button_clicked()));
+    connect(ui->cleverHintButton, SIGNAL(clicked()), this, SLOT(clever_hint_button_clicked()));
     connect(ui->newGameButton_2, SIGNAL(clicked()), this, SLOT(start_game_button_clicked()));
     connect(ui->newGameButton_1, SIGNAL(clicked()), this, SLOT(start_game_button_clicked()));
     connect(ui->exitButton_2, SIGNAL(clicked()), this, SLOT(close()));
@@ -87,6 +98,12 @@ mainwindow::mainwindow(QWidget *parent) :
     connect(ui->newGameButton_6, SIGNAL(clicked()), this, SLOT(start_game_button_clicked()));
     connect(ui->toMainMenuButton_6, SIGNAL(clicked()), this, SLOT(to_main_window_clicked()));
     connect(ui->exitButton_6, SIGNAL(clicked()), this, SLOT(close()));
+    connect(ui->rulesButton, SIGNAL(clicked()), this, SLOT(show_rules_clicked()));
+    connect(ui->pauseRulesButton, SIGNAL(clicked()), this, SLOT(show_rules_clicked()));
+    connect(ui->previousRuleButton, SIGNAL(clicked()), this, SLOT(decrease_page_number()));
+    connect(ui->nextRulesButton, SIGNAL(clicked()), this, SLOT(increase_page_number()));
+    connect(ui->closeRulesButton, SIGNAL(clicked()), this, SLOT(close_rules_button_clicked()));
+    connect(ui->closeHintButton, SIGNAL(clicked()), this, SLOT(close_hint_button_clicked()));
 
 }
 
@@ -95,11 +112,8 @@ mainwindow::~mainwindow() {
 }
 
 void mainwindow::start_game_button_clicked() {
-    ui->timer_label->setText("00:00");
-    for(int i = 0; i < 9; i ++)
-    {
-        for(int j = 0; j < 9; j ++)
-        {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
             type_of_cell[i][j] = 0;
         }
     }
@@ -108,6 +122,12 @@ void mainwindow::start_game_button_clicked() {
         ui->newGameButton_2->setEnabled(false);
 
     } else {
+        ui->changePencilButton->setIcon(QIcon("../Pictures/pen.png"));
+        pencil = false;
+        ui->cleverHintButton->setStyleSheet("background-color:rgba(0, 0, 255, 50);");
+        ui->hintButton->setStyleSheet("background-color:rgba(255, 0, 255, 50);");
+        ui->timer_label->setText("00:00");
+        ui->show_mistakes_label->setText("ошибки: 0");
         ui->newGameButton_1->setEnabled(true);
         ui->newGameButton_2->setEnabled(true);
         ui->endGameWidget->hide();
@@ -153,7 +173,7 @@ void mainwindow::start_game_button_clicked() {
             }
             case 4: {
                 // very hard difficult
-                playersfield = new PlayersField(1, 1001, 5000);
+                playersfield = new PlayersField(1, 5000, 5000);
                 break;
             }
         }
@@ -169,25 +189,13 @@ void mainwindow::change_difficulty_button_clicked(int type) {
     current_difficulty = type;
 }
 
-void mainwindow::change_theme_button_clicked() {
-    dark_theme ^= 1;
-
-    if (dark_theme) {
-        ui->themeButton->setIcon(QIcon("../Pictures/sun.png"));
-    } else {
-        ui->themeButton->setIcon(QIcon("../Pictures/moon.png"));
-
-    }
-}
-
-
 // 0 nothing special
 // 1 blue clicked
 // 2 red number
 // 3 violet
 void mainwindow::cell_button_clicked(int cell) {
     if (no_mistakes == 0) {
-     //   std::cout << "no_mistakes = 0. I return\n";
+        //   std::cout << "no_mistakes = 0. I return\n";
         return;
     }
     if (previous_cell != -1) {
@@ -238,8 +246,8 @@ void mainwindow::cell_button_clicked(int cell) {
         }
     } else {
         std::vector <std::pair<int, int>> add_remember;
-        for (int i = 0; i < 9; i ++) {
-            for (int j = 0; j < 9; j ++) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 add_remember.push_back({i * 10 + j, notes[i][j]});
             }
         }
@@ -282,8 +290,9 @@ void mainwindow::cell_button_clicked(int cell) {
             // work like mistake
             SetColorButtons();
             DisplayField();
-            QString style = "text-align: center; background-color:rgba(255, 255, 0, 100); border-style: solid; border-width: " +
-                            GetBorder(cell / 10, cell % 10) + " border-color: black; color: red;";
+            QString style =
+                    "text-align: center; background-color:rgba(255, 255, 0, 100); border-style: solid; border-width: " +
+                    GetBorder(cell / 10, cell % 10) + " border-color: black; color: red;";
             field_buttons[cell / 10][cell % 10]->setStyleSheet(style);
             field_buttons[cell / 10][cell % 10]->setFont(font32);
             field_buttons[cell / 10][cell % 10]->setText(QString::number(current_number));
@@ -293,9 +302,9 @@ void mainwindow::cell_button_clicked(int cell) {
             ui->hintButton->setEnabled(false);
             ui->cleverHintButton->setEnabled(false);
             ui->fastPencilButton->setEnabled(false);
-            amount_of_mistakes ++;
-            if(amount_of_mistakes == 3 && check_mistakes)
-            {
+            amount_of_mistakes++;
+            ui->show_mistakes_label->setText("ошибки: " + QString::number(amount_of_mistakes));
+            if (amount_of_mistakes == 3 && check_mistakes) {
                 lose_game();
             }
             return;
@@ -326,7 +335,6 @@ void mainwindow::ShowStartGrid() {
 }
 
 void mainwindow::number_button_clicked(int number) {
-    // to commit
     if (no_mistakes == 0)
         return;
     int value = number + 1;
@@ -380,32 +388,37 @@ void mainwindow::SetColorButtons() {
             }
             switch (k) {
                 case 0: {
-                    QString style = align + " background-color:rgba(255, 255, 255, 0); border-style: solid; border-width: " +
-                                    GetBorder(i, j) + " border-color: black;";
+                    QString style =
+                            align + " background-color:rgba(255, 255, 255, 0); border-style: solid; border-width: " +
+                            GetBorder(i, j) + " border-color: black;";
                     field_buttons[i][j]->setStyleSheet(style);
                     break;
                 }
                 case 1: {
-                    QString style = align + " background-color:rgba(0, 0, 255, 50); border-style: solid; border-width: " +
-                                    GetBorder(i, j) + " border-color: black;";
+                    QString style =
+                            align + " background-color:rgba(0, 0, 255, 50); border-style: solid; border-width: " +
+                            GetBorder(i, j) + " border-color: black;";
                     field_buttons[i][j]->setStyleSheet(style);
                     break;
                 }
                 case 2: {
-                    QString style = align + " background-color:rgba(255, 0, 0, 50); border-style: solid; border-width: " +
-                                    GetBorder(i, j) + " border-color: black;";
+                    QString style =
+                            align + " background-color:rgba(255, 0, 0, 50); border-style: solid; border-width: " +
+                            GetBorder(i, j) + " border-color: black;";
                     field_buttons[i][j]->setStyleSheet(style);
                     break;
                 }
                 case 3: {
-                    QString style = align + " background-color:rgba(255, 0, 255, 50); border-style: solid; border-width: " +
-                                    GetBorder(i, j) + " border-color: black;";
+                    QString style =
+                            align + " background-color:rgba(255, 0, 255, 50); border-style: solid; border-width: " +
+                            GetBorder(i, j) + " border-color: black;";
                     field_buttons[i][j]->setStyleSheet(style);
                     break;
                 }
-                case 4:{
-                    QString style = align + " background-color:rgba(250, 0, 250, 25); border-style: solid; border-width: " +
-                                    GetBorder(i, j) + " border-color: black;";
+                default: {
+                    QString style =
+                            align + " background-color:rgba(250, 0, 250, 25); border-style: solid; border-width: " +
+                            GetBorder(i, j) + " border-color: black;";
                     field_buttons[i][j]->setStyleSheet(style);
                     break;
                 }
@@ -424,7 +437,7 @@ void mainwindow::SetColorButtons() {
         field_buttons[previous_cell / 10][previous_cell % 10]->setStyleSheet(style);
 
     }
- }
+}
 
 void mainwindow::DisplayField() {
     for (int i = 0; i < 9; i++) {
@@ -448,7 +461,7 @@ void mainwindow::DisplayField() {
                             s += "  ";
                         }
                         if (value % 3 == 0)
-                            s += "\n" ;
+                            s += "\n";
                         else
                             s += " ";
                     }
@@ -502,18 +515,20 @@ QString mainwindow::GetBorder(int i, int j) {
 
 void mainwindow::change_pencil_button_clicked() {
     playersfield->SetPencil();
-    if(pencil == 0)
-        ui->changePencilButton->setText("карандаш");
+    if (pencil == 0)
+        ui->changePencilButton->setIcon(QIcon("../Pictures/pencil.png"));
     else
-        ui->changePencilButton->setText("ручка");
+    {
+        ui->changePencilButton->setIcon(QIcon("../Pictures/pen.png"));
+    }
     pencil ^= 1;
 }
 
 void mainwindow::back_button_clicked() {
     if (no_mistakes) {
         // all correct
-        if (remember.empty()){
-            ui->backMoveButton->setEnabled(0);
+        if (remember.empty()) {
+            ui->backMoveButton->setEnabled(false);
             return;
         }
         auto previous = remember.back();
@@ -532,11 +547,11 @@ void mainwindow::back_button_clicked() {
     } else {
         // one mistake
         no_mistakes = true;
-        if(fast_pencil)
+        if (fast_pencil)
             ui->fastPencilButton->setEnabled(true);
-        if(simple_hints_left > 0)
+        if (simple_hints_left > 0)
             ui->hintButton->setEnabled(true);
-        if(clever_hint_left > 0)
+        if (clever_hint_left > 0)
             ui->cleverHintButton->setEnabled(true);
         SetColorButtons();
         DisplayField();
@@ -547,7 +562,7 @@ void mainwindow::back_button_clicked() {
 
 void mainwindow::fast_pencil_button_clicked() {
 
-    std::vector<std::pair<int, int> > add_remember;
+    std::vector <std::pair<int, int>> add_remember;
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (notes[i][j] & 1)
@@ -569,24 +584,47 @@ void mainwindow::simple_hint_button_clicked() {
     SetColorButtons();
     DisplayField();
     simple_hints_left--;
+    ChangeBulbBackground();
     if (!simple_hints_left) {
         ui->hintButton->setEnabled(false);
     }
 }
 
+void mainwindow::clever_hint_button_clicked() {
+    timer->stop();
+    int type = playersfield->GetCleverHint();
+    ui->cleverHintWidget->show();
+    ui->gameWidget->setEnabled(0);
+    if(type == -1)
+    {
+        std::cout << "loh\n";
+        return;
+    }
+    if(type == 0)
+    {
+        std::cout << "loh x2\n";
+    }
+    std::cout << type << '\n';
+    QString picture_path = "../Pictures/Hints/" + QString::number(type) + ".png";
+    QPixmap pixmap(picture_path);
+    pixmap = pixmap.scaled(ui->picture_hint_label->width(), ui->picture_hint_label->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    ui->picture_hint_label->setPixmap(pixmap);
+
+}
+
 
 void mainwindow::increase_time() {
-    s ++;
-    if(s == 60)
-        m ++, s = 0;
-    if(m == 60)
-        h ++, m = 0;
+    s++;
+    if (s == 60)
+        m++, s = 0;
+    if (m == 60)
+        h++, m = 0;
     QString time;
     if (h > 0) {
         if (h < 10)
             time += "0" + QString::number(h) + ":";
         else
-            time += QString::number(h) + ":";;
+            time += QString::number(h) + ":";
     }
     if (m < 10)
         time += "0" + QString::number(m) + ":";
@@ -602,11 +640,11 @@ void mainwindow::increase_time() {
 void mainwindow::finish_game() {
     timer->stop();
     ui->endGameWidget->show();
-    ui->gameWidget->setEnabled(0);
+    ui->gameWidget->setEnabled(false);
     current_number = -1;
     previous_cell = -1;
-    for(int i = 0; i < 9; i ++){
-        for(int j = 0; j < 9; j ++) {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
             type_of_cell[i][j] = 0;
         }
     }
@@ -625,10 +663,8 @@ void mainwindow::to_main_window_clicked() {
     previous_cell = -1;
     amount_of_mistakes = 0;
     no_mistakes = true;
-    for(int i = 0; i < 9; i ++)
-    {
-        for(int j = 0; j < 9; j ++)
-        {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
             type_of_cell[i][j] = 0;
             field_buttons[i][j]->setText("");
         }
@@ -640,7 +676,7 @@ void mainwindow::to_main_window_clicked() {
 void mainwindow::lose_game() {
     timer->stop();
     ui->loseGameWidget->show();
-    ui->gameWidget->setEnabled(0);
+    ui->gameWidget->setEnabled(false);
     current_number = -1;
     previous_cell = -1;
     ui->mistakes_label_1->setText(QString::number(amount_of_mistakes)); // ENTER MISTAKES
@@ -651,7 +687,7 @@ void mainwindow::lose_game() {
 void mainwindow::pause_button_clicked() {
     timer->stop();
     ui->pauseGameWidget->show();
-    ui->gameWidget->setEnabled(0);
+    ui->gameWidget->setEnabled(false);
     current_number = -1;
     previous_cell = -1;
     ui->mistakes_label_6->setText(QString::number(amount_of_mistakes)); // ENTER MISTAKES
@@ -660,8 +696,96 @@ void mainwindow::pause_button_clicked() {
 
 void mainwindow::continue_button_clicked() {
     ui->pauseGameWidget->hide();
-    ui->gameWidget->setEnabled(1);
+    ui->gameWidget->setEnabled(true);
     timer->start();
 }
+
+void mainwindow::show_rules_clicked() {
+    ui->mainMenuWidget->setEnabled(false);
+    current_page = 0;
+    ui->rulesWidget->show();
+    DisplayRules();
+}
+
+void mainwindow::DisplayRules() {
+    QString picture_path, text_path;
+
+    switch (current_page) {
+        case 0: {
+            picture_path = "../Pictures/example.png";
+            text_path = "../Texts/example.txt";
+            break;
+        }
+        case 1: {
+            picture_path = "../Pictures/fill.png";
+            text_path = "../Texts/fill.txt";
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    QPixmap pixmap(picture_path);
+    pixmap = pixmap.scaled(ui->picture_label->width(), ui->picture_label->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    ui->picture_label->setPixmap(pixmap);
+    QFile file(text_path);
+    if (file.open(QFile::ReadOnly | QFile::Text)) {
+        QTextStream in(&file);
+        QString text = in.readAll();
+        file.close();
+        ui->rules_label->setText(text);
+        ui->rules_label->setWordWrap(true);
+    }
+    file.close();
+
+
+}
+
+void mainwindow::decrease_page_number() {
+    if(current_page - 1 < 0)
+        return;
+    current_page --;
+    DisplayRules();
+}
+
+void mainwindow::close_rules_button_clicked() {
+    current_page = 0;
+    ui->mainMenuWidget->setEnabled(true);
+    ui->rulesWidget->hide();
+}
+
+void mainwindow::increase_page_number() {
+    if(current_page + 1 > 2)
+        return;
+    current_page ++;
+    DisplayRules();
+}
+
+void mainwindow::ChangeBulbBackground() {
+    switch (simple_hints_left) {
+        case 1:
+        {
+            ui->hintButton->setStyleSheet("background-color:rgba(55, 0, 255, 50);");
+            break;
+        }
+        case 2:
+        {
+            ui->hintButton->setStyleSheet("background-color:rgba(155, 0, 255, 50);");
+            break;
+        }
+        default:
+        {
+            ui->hintButton->setStyleSheet("background-color:rgba(255, 0, 255, 50);");
+        }
+    }
+}
+
+void mainwindow::close_hint_button_clicked() {
+    ui->cleverHintWidget->hide();
+    timer->start();
+    ui->gameWidget->setEnabled(true);
+}
+
 
 // text-align: left;

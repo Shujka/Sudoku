@@ -107,7 +107,7 @@
      <bool>false</bool>
     </property>
     <property name="text">
-     <string>Правила игры</string>
+     <string>Как играть</string>
     </property>
    </widget>
    <widget class="QPushButton" name="exitButton">
@@ -189,7 +189,7 @@
       <x>821</x>
       <y>630</y>
       <width>281</width>
-      <height>23</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
@@ -220,31 +220,11 @@
    <widget class="QPushButton" name="pauseButton">
     <property name="geometry">
      <rect>
-      <x>1850</x>
+      <x>1840</x>
       <y>10</y>
       <width>60</width>
       <height>60</height>
      </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="themeButton">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>1770</x>
-      <y>10</y>
-      <width>60</width>
-      <height>60</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color:rgba(255, 255, 255, 0);
-border:none;</string>
     </property>
     <property name="text">
      <string/>
@@ -254,19 +234,6 @@ border:none;</string>
       <width>60</width>
       <height>60</height>
      </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="smalRulesButton">
-    <property name="geometry">
-     <rect>
-      <x>1690</x>
-      <y>10</y>
-      <width>60</width>
-      <height>60</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="fastPencilButton">
@@ -279,7 +246,13 @@ border:none;</string>
      </rect>
     </property>
     <property name="text">
-     <string>быстрый карандаш</string>
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>100</width>
+      <height>100</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="changePencilButton">
@@ -292,7 +265,13 @@ border:none;</string>
      </rect>
     </property>
     <property name="text">
-     <string>карандаш</string>
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>100</width>
+      <height>100</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="hintButton">
@@ -305,7 +284,13 @@ border:none;</string>
      </rect>
     </property>
     <property name="text">
-     <string>подсказка</string>
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>100</width>
+      <height>100</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="cleverHintButton">
@@ -318,7 +303,13 @@ border:none;</string>
      </rect>
     </property>
     <property name="text">
-     <string>умная подсказка</string>
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>100</width>
+      <height>100</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="backMoveButton">
@@ -331,14 +322,20 @@ border:none;</string>
      </rect>
     </property>
     <property name="text">
-     <string>назад</string>
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>100</width>
+      <height>100</height>
+     </size>
     </property>
    </widget>
    <widget class="QLabel" name="timer_label">
     <property name="geometry">
      <rect>
       <x>830</x>
-      <y>20</y>
+      <y>50</y>
       <width>261</width>
       <height>51</height>
      </rect>
@@ -357,6 +354,25 @@ border:none;</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="show_mistakes_label">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>146</y>
+      <width>211</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Noto Serif Tangut</family>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
     </property>
    </widget>
   </widget>
@@ -880,7 +896,7 @@ border:none;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>320</y>
+      <y>290</y>
       <width>371</width>
       <height>41</height>
      </rect>
@@ -898,7 +914,7 @@ border:none;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>390</y>
+      <y>410</y>
       <width>371</width>
       <height>41</height>
      </rect>
@@ -916,7 +932,7 @@ border:none;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>250</y>
+      <y>230</y>
       <width>371</width>
       <height>41</height>
      </rect>
@@ -996,7 +1012,7 @@ border:none;</string>
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>460</y>
+      <y>470</y>
       <width>371</width>
       <height>41</height>
      </rect>
@@ -1008,6 +1024,454 @@ border:none;</string>
     </property>
     <property name="text">
      <string>ВЫХОД</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pauseRulesButton">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>350</y>
+      <width>371</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Noto Serif Tamil</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>КАК ИГРАТЬ</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="rulesWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>250</y>
+     <width>581</width>
+     <height>621</height>
+    </rect>
+   </property>
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>153</red>
+         <green>193</green>
+         <blue>241</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>153</red>
+         <green>193</green>
+         <blue>241</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>153</red>
+         <green>193</green>
+         <blue>241</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>153</red>
+         <green>193</green>
+         <blue>241</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <widget class="QLabel" name="picture_label">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>30</y>
+      <width>500</width>
+      <height>351</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="rules_label">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>410</y>
+      <width>500</width>
+      <height>160</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Noto Serif Tamil</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="nextRulesButton">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>580</y>
+      <width>88</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="text">
+     <string>Далее</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="previousRuleButton">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>580</y>
+      <width>88</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="text">
+     <string>Назад</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="closeRulesButton">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>10</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="text">
+     <string>X</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QWidget" name="cleverHintWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>250</y>
+     <width>581</width>
+     <height>621</height>
+    </rect>
+   </property>
+   <property name="palette">
+    <palette>
+     <active>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>153</red>
+         <green>193</green>
+         <blue>241</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </active>
+     <inactive>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>153</red>
+         <green>193</green>
+         <blue>241</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </inactive>
+     <disabled>
+      <colorrole role="Base">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>153</red>
+         <green>193</green>
+         <blue>241</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="Window">
+       <brush brushstyle="SolidPattern">
+        <color alpha="255">
+         <red>153</red>
+         <green>193</green>
+         <blue>241</blue>
+        </color>
+       </brush>
+      </colorrole>
+     </disabled>
+    </palette>
+   </property>
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
+   <widget class="QLabel" name="picture_hint_label">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>30</y>
+      <width>500</width>
+      <height>351</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="text_hint_label">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>410</y>
+      <width>500</width>
+      <height>160</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Noto Serif Tamil</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="closeHintButton">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>10</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="palette">
+     <palette>
+      <active>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </active>
+      <inactive>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </inactive>
+      <disabled>
+       <colorrole role="Button">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>53</red>
+          <green>132</green>
+          <blue>228</blue>
+         </color>
+        </brush>
+       </colorrole>
+      </disabled>
+     </palette>
+    </property>
+    <property name="text">
+     <string>X</string>
     </property>
    </widget>
   </widget>

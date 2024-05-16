@@ -30,7 +30,7 @@ void PlayersField::FillBaseNotes() {
             } else {
                 notes[i][j] = candidates[i][j];
                 players_notes[i][j] = (1 << field[i][j]);
-                players_notes[i][j] ++;
+                players_notes[i][j]++;
                 notes[i][j]++;
             }
         }
@@ -50,20 +50,19 @@ int PlayersField::TryAdd(int i, int j, int number) {
     // 2 - not changed pencil mistake
     // 3 - mistake in filling with pen
     std::cout << "tryadd\n";
-    for(int i = 0; i < 9; i ++)
-    {
-        for(int j = 0; j < 9; j ++)
-        {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
             std::cout << field[i][j] << " ";
         }
     }
     std::cout << '\n';
-    std::cout << " i " << i << " " << j << " " << field[i][j] << " number " << number << " answer " << answer[i][j] << '\n';
+    std::cout << " i " << i << " " << j << " " << field[i][j] << " number " << number << " answer " << answer[i][j]
+              << '\n';
     if (pencil) {
         // pencil
         // every move is correct
         // just ^ notes
-        if(notes[i][j] & 1) {
+        if (notes[i][j] & 1) {
             // not empty cell
             // do nothing
             return 0;
@@ -109,7 +108,7 @@ int PlayersField::TryAdd(int i, int j, int number) {
                 field[i][j] = number;
                 players_notes[i][j] = notes[i][j];
                 for (int x = 0; x < 9; x++) {
-                    if(x == i)
+                    if (x == i)
                         continue;
                     if ((notes[x][j] >> number) & 1) {
                         notes[x][j] -= (1 << number);
@@ -119,7 +118,7 @@ int PlayersField::TryAdd(int i, int j, int number) {
                     }
                 }
                 for (int y = 0; y < 9; y++) {
-                    if(y == j)
+                    if (y == j)
                         continue;
                     if ((notes[i][y] >> number) & 1) {
                         notes[i][y] -= (1 << number);
@@ -130,7 +129,7 @@ int PlayersField::TryAdd(int i, int j, int number) {
                 }
                 for (int x = (i / 3) * 3; x < (i / 3 + 1) * 3; x++) {
                     for (int y = (j / 3) * 3; y < (j / 3 + 1) * 3; y++) {
-                        if(x == i && y == j)
+                        if (x == i && y == j)
                             continue;
                         if ((notes[x][y] >> number) & 1) {
                             notes[x][y] -= (1 << number);
@@ -178,7 +177,7 @@ void PlayersField::SetCell(int row, int column, int value) {
     std::cout << "ok set cell " << row << " " << column << " value " << value << '\n';
     if (value & 1) {
         // not empty cell
-        for (int i = 1; i < 9; i ++) {
+        for (int i = 1; i < 9; i++) {
             if ((value >> i) & 1) {
                 field[row][column] = i;
                 break;
@@ -188,10 +187,8 @@ void PlayersField::SetCell(int row, int column, int value) {
         field[row][column] = 0;
     }
     players_notes[row][column] = value;
-    for (int i = 0; i < 9; i ++)
-    {
-        for (int j = 0; j < 9; j ++)
-        {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
             std::cout << field[i][j];
         }
         std::cout << '\n';
@@ -249,7 +246,7 @@ int PlayersField::GetSimpleHint() {
         }
     }
     for (int y = 0; y < 9; y++) {
-        if(y == j)
+        if (y == j)
             continue;
         if ((notes[i][y] >> answer[i][j]) & 1) {
             notes[i][y] -= (1 << answer[i][j]);
@@ -260,7 +257,7 @@ int PlayersField::GetSimpleHint() {
     }
     for (int x = (i / 3) * 3; x < (i / 3 + 1) * 3; x++) {
         for (int y = (j / 3) * 3; y < (j / 3 + 1) * 3; y++) {
-            if(x == i && y == j)
+            if (x == i && y == j)
                 continue;
             if ((notes[x][y] >> answer[i][j]) & 1) {
                 notes[x][y] -= (1 << answer[i][j]);
@@ -276,24 +273,235 @@ int PlayersField::GetSimpleHint() {
 int PlayersField::GetEmptyCellsNumber() {
     int ans = 0;
     std::cout << '\n';
-    for(int i = 0; i < 9; i ++)
-    {
-        for(int j = 0; j < 9; j ++)
-        {
-            if(!field[i][j])
-                ans ++;
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (!field[i][j])
+                ans++;
         }
     }
     return ans;
 }
 
 void PlayersField::show_field() {
-    for(int i = 0; i < 9; i ++)
-    {
-        for(int j = 0; j < 9; j ++)
-        {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
             std::cout << field[i][j];
         }
         std::cout << '\n';
     }
+}
+
+// -1 wrong players_notes
+// 1 last free cell
+// 2 last remaining cell
+// 3 last possible cell
+// 4 obvious single
+// 5 obvious pair
+// 6 obvious triples
+
+int PlayersField::GetCleverHint() {
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (((players_notes[i][j] >> answer[i][j]) & 1) == 0)
+                return -1;
+        }
+    }
+
+    // last free cell search
+    for (int i = 0; i < 9; i++) {
+        int candidate = 0;
+        for (int j = 0; j < 9; j++) {
+            if (field[i][j] == 0)
+                candidate++;
+            if (candidate > 1)
+                break;
+        }
+        if (candidate == 1){
+            std::cout << "ok 320 in " << i << '\n';
+            return 1;
+        }
+    }
+    for (int j = 0; j < 9; j++) {
+        int candidate = 0;
+        for (int i = 0; i < 9; i++) {
+            if (field[i][j] == 0)
+                candidate++;
+            if (candidate > 1) {
+                break;
+            }
+        }
+        if (candidate == 1) {
+            std::cout << "ok 334 in " << j << '\n';
+            return 1;
+        }
+    }
+    for (int x = 0; x < 9; x += 3) {
+        for (int y = 0; y < 9; y += 3) {
+            int candidate = 0;
+            for (int i = x; i < x + 3 && candidate < 2; i++) {
+                for (int j = y; j < y + 3; j++) {
+                    if (field[i][j] == 0)
+                        candidate++;
+                    if (candidate > 1)
+                        break;
+                }
+            }
+            if (candidate == 1) {
+                std::cout << "ok 350 in " << x + 1 << " " << y + 1 << '\n';
+                return 1;
+            }
+        }
+    }
+
+    // search for last remaining cell
+    for (int x = 0; x < 9; x += 3) {
+        for (int y = 0; y < 9; y += 3) {
+            std::vector<int> a(10);
+            for (int i = x; i < x + 3; i++) {
+                for (int j = y; j < y + 3; j++) {
+                    if (field[i][j] == 0) {
+                        for (int value = 1; value <= 9; value++) {
+                            if ((notes[i][j] >> value) & 1) {
+                                a[value]++;
+                            }
+                        }
+                    }
+                }
+            }
+            for (int value = 1; value <= 9; value++) {
+                if (a[value] == 1) {
+                    std::cout << "ok in 373 " << x << " " << y << " " << value << '\n';
+                    return 2;
+                }
+            }
+        }
+    }
+
+    // search for last possible cell
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (__builtin_popcount(notes[i][j]) == 1) {
+                std::cout << "ok 384 " << i << " " << j << '\n';
+                return 3;
+            }
+        }
+    }
+
+    // search for obvious singles
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (__builtin_popcount(players_notes[i][j]) == 1) {
+                std::cout << "ok 394 " << i << " " << j << '\n';
+                return 4;
+            }
+        }
+    }
+
+    // search for obvious pairs
+    for (int x = 0; x < 9; x += 3) {
+        for (int y = 0; y < 9; y += 3) {
+            std::vector<int> pairs;
+            std::vector<int> all_variants(10);
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    if (field[i][j] == 0 && __builtin_popcount(players_notes[i][j]) == 2) {
+                        pairs.push_back(players_notes[i][j]);
+                        std::cout << "ok i " << i << " " << j << " " << players_notes[i][j] << '\n';
+                    }
+                    if (field[i][j] == 0) {
+                        for (int value = 1; value <= 9; value++) {
+                            if ((players_notes[i][j] >> value) & 1)
+                                all_variants[value]++;
+                        }
+                    }
+                }
+            }
+            std::cout << "finish\n";
+            sort(pairs.begin(), pairs.end());
+            for (int i = 1; i < pairs.size(); i++) {
+                if (pairs[i] == pairs[i - 1]) {
+                    for (int value = 1; value <= 9; value++) {
+                        if (((pairs[i] >> value) & 1) && all_variants[value] > 2) {
+                            std::cout << "ok 423 x " << x + 1 << " y " << y + 1 << " ";
+                            for (int vv = 1; vv <= 9; vv ++)
+                            {
+                                if((pairs[i] >> vv) & 1)
+                                    std::cout << vv << " ";
+                            }
+                            std::cout << '\n';
+                            return 5;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    for (int i = 0; i < 9; i++) {
+        std::vector<int> pairs;
+        std::vector<int> all_variants(10);
+        for (int j = 0; j < 9; j++) {
+            if (field[i][j] == 0 && __builtin_popcount(players_notes[i][j]) == 2) {
+                pairs.push_back(players_notes[i][j]);
+            }
+            if (field[i][j] == 0) {
+                for (int value = 1; value <= 9; value++) {
+                    if ((players_notes[i][j] >> value) & 1)
+                        all_variants[value]++;
+                }
+            }
+        }
+        sort(pairs.begin(), pairs.end());
+        for (int j = 1; j < pairs.size(); j++) {
+            if (pairs[j] == pairs[j - 1]) {
+                for (int value = 1; value <= 9; value++) {
+                    if (((pairs[j] >> value) & 1) && all_variants[value] > 2) {
+                        std::cout << " ok 458 i " << i + 1 << " ";
+                        for (int vv = 1; vv <= 9; vv ++)
+                        {
+                            if((pairs[j] >> vv) & 1)
+                                std::cout << vv << " ";
+                        }
+                        std::cout << '\n';
+                        return 5;
+                    }
+                }
+            }
+        }
+    }
+    for (int j = 0; j < 9; j++) {
+        std::vector<int> pairs;
+        std::vector<int> all_variants(10);
+        for (int i = 0; i < 9; i++) {
+            if (field[i][j] == 0 && __builtin_popcount(players_notes[i][j]) == 2) {
+                pairs.push_back(players_notes[i][j]);
+            }
+            if (field[i][j] == 0) {
+                for (int value = 1; value <= 9; value++) {
+                    if ((players_notes[i][j] >> value) & 1)
+                        all_variants[value]++;
+                }
+            }
+        }
+        sort(pairs.begin(), pairs.end());
+        for (int i = 1; i < pairs.size(); i++) {
+            if (pairs[i] == pairs[i - 1]) {
+                for (int value = 1; value <= 9; value++) {
+                    if (((pairs[i] >> value) & 1) && all_variants[value] > 2) {
+                        std::cout << " ok 490 i " << i + 1 << " ";
+                        for (int vv = 1; vv <= 9; vv ++)
+                        {
+                            if((pairs[i] >> vv) & 1)
+                                std::cout << vv << " ";
+                        }
+                        std::cout << '\n';
+                        return 5;
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+    // search for obvious triples
+
 }

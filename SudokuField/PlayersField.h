@@ -19,6 +19,7 @@ public:
     void SetNotes(int row, int column);
     int GetNote(int row, int column);
     int GetSimpleHint();
+    int GetCleverHint();
     int GetEmptyCellsNumber();
     void show_field();
 
