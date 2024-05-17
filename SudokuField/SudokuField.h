@@ -23,7 +23,6 @@ public:
 private:
     int CalculateDifficulty();
     int GetDifficulty();
-    int IsSolvable();
     void FillAnswer();
     bool FillAnswerGrid();
     void FillCrossCandidates(int i, int j);
@@ -50,6 +49,8 @@ protected:
     void FillAllCandidates();
     bool IsValid(int i, int j);
     void FillCheck();
+    int IsSolvable();
+    bool Solve();
     int** field;
     int** answer;
     int** candidates;

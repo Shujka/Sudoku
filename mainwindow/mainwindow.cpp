@@ -1,8 +1,7 @@
-#include <iostream>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QDebug>
 
 mainwindow::mainwindow(QWidget *parent) :
         QWidget(parent), ui(new Ui::mainwindow) {
@@ -24,6 +23,8 @@ mainwindow::mainwindow(QWidget *parent) :
     ui->fastPencilButton->setStyleSheet("background-color:rgba(0, 0, 255, 50);");
     ui->changePencilButton->setStyleSheet("background-color:rgba(0, 0, 255, 50);");
     ui->cleverHintWidget->hide();
+    ui->pushButton->hide();
+    ui->label->hide();
 
     ui->backMoveButton->setEnabled(false);
 
@@ -52,7 +53,6 @@ mainwindow::mainwindow(QWidget *parent) :
             QString style =
                     "background-color:rgba(255, 255, 255, 0); border-style: solid; border-width: " + GetBorder(i, j) +
                     " border-color: black;";
-            qDebug() << i << " " << j << " " << style;
             //style = "background-color:rgba(255, 255, 255, 0); border-style: solid; border-width: 2px 2px 2px 2px; border-color: black;";
             field_buttons[i][j]->setStyleSheet(style);
             b->show();
@@ -104,7 +104,8 @@ mainwindow::mainwindow(QWidget *parent) :
     connect(ui->nextRulesButton, SIGNAL(clicked()), this, SLOT(increase_page_number()));
     connect(ui->closeRulesButton, SIGNAL(clicked()), this, SLOT(close_rules_button_clicked()));
     connect(ui->closeHintButton, SIGNAL(clicked()), this, SLOT(close_hint_button_clicked()));
-
+    connect(ui->CreateFieldButton, SIGNAL(clicked()), this, SLOT(start_create_button_clicked()));
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(start_game_button_clicked()));
 }
 
 mainwindow::~mainwindow() {
@@ -117,39 +118,49 @@ void mainwindow::start_game_button_clicked() {
             type_of_cell[i][j] = 0;
         }
     }
+    ui->pushButton->hide();
+    ui->label->hide();
+    ui->backMoveButton->show();
+    ui->pauseButton->show();
+    ui->show_mistakes_label->show();
+    ui->timer_label->show();
+    ui->fastPencilButton->show();
+    ui->changePencilButton->show();
+    ui->hintButton->show();
+    ui->cleverHintButton->show();
     if (author_field) {
         ui->newGameButton_1->setEnabled(false);
         ui->newGameButton_2->setEnabled(false);
-
+        ui->newGameButton_6->setEnabled(false);
+        playersfield->PrepareGame();
     } else {
-        ui->changePencilButton->setIcon(QIcon("../Pictures/pen.png"));
-        pencil = false;
-        ui->cleverHintButton->setStyleSheet("background-color:rgba(0, 0, 255, 50);");
-        ui->hintButton->setStyleSheet("background-color:rgba(255, 0, 255, 50);");
-        ui->timer_label->setText("00:00");
-        ui->show_mistakes_label->setText("ошибки: 0");
         ui->newGameButton_1->setEnabled(true);
         ui->newGameButton_2->setEnabled(true);
-        ui->endGameWidget->hide();
-        ui->loseGameWidget->hide();
-        ui->pauseGameWidget->hide();
-        ui->gameWidget->setEnabled(true);
-        ui->fastPencilButton->setEnabled(true);
-        clever_hint_left = 1;
-        ui->cleverHintButton->setEnabled(true);
-        remember.clear();
-        ui->backMoveButton->setEnabled(false);
-        ui->hintButton->setEnabled(true);
-        simple_hints_left = 3;
-        check_mistakes = ui->checkBox->isChecked();
-        no_mistakes = true;
-        /*for(int i = 0; i < 9; i ++)
-        {
-            for(int j = 0; j < 9; j ++)
-            {
-                field_buttons[i][j]->setText("");
-            }
-        }*/
+        ui->newGameButton_6->setEnabled(true);
+    }
+    ui->changePencilButton->setIcon(QIcon("../Pictures/pen.png"));
+    pencil = false;
+    ui->cleverHintButton->setStyleSheet("background-color:rgba(0, 0, 255, 50);");
+    ui->hintButton->setStyleSheet("background-color:rgba(255, 0, 255, 50);");
+    ui->timer_label->setText("00:00");
+    ui->show_mistakes_label->setText("ошибки: 0");
+    ui->newGameButton_1->setEnabled(true);
+    ui->newGameButton_2->setEnabled(true);
+    ui->endGameWidget->hide();
+    ui->loseGameWidget->hide();
+    ui->pauseGameWidget->hide();
+    ui->gameWidget->setEnabled(true);
+    ui->fastPencilButton->setEnabled(true);
+    clever_hint_left = 1;
+    ui->cleverHintButton->setEnabled(true);
+    remember.clear();
+    ui->backMoveButton->setEnabled(false);
+    ui->hintButton->setEnabled(true);
+    simple_hints_left = 3;
+    check_mistakes = ui->checkBox->isChecked();
+    no_mistakes = true;
+
+    if(!author_field) {
         switch (current_difficulty) {
             case 0: {
                 // simple generate
@@ -173,16 +184,17 @@ void mainwindow::start_game_button_clicked() {
             }
             case 4: {
                 // very hard difficult
-                playersfield = new PlayersField(1, 5000, 5000);
+                playersfield = new PlayersField(1, 1000, 5000);
                 break;
             }
         }
-        notes = playersfield->GetNotes();
-        answer = playersfield->GetSudokuFieldAnswer();
-        ui->mainMenuWidget->hide();
-        ShowStartGrid();
-        ui->gameWidget->show();
     }
+    author_field = false;
+    notes = playersfield->GetNotes();
+    answer = playersfield->GetSudokuFieldAnswer();
+    ui->mainMenuWidget->hide();
+    ShowStartGrid();
+    ui->gameWidget->show();
 }
 
 void mainwindow::change_difficulty_button_clicked(int type) {
@@ -196,6 +208,11 @@ void mainwindow::change_difficulty_button_clicked(int type) {
 void mainwindow::cell_button_clicked(int cell) {
     if (no_mistakes == 0) {
         //   std::cout << "no_mistakes = 0. I return\n";
+        return;
+    }
+    if(author_field)
+    {
+        previous_cell = cell;
         return;
     }
     if (previous_cell != -1) {
@@ -245,6 +262,7 @@ void mainwindow::cell_button_clicked(int cell) {
             request = false;
         }
     } else {
+        
         std::vector <std::pair<int, int>> add_remember;
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -258,7 +276,6 @@ void mainwindow::cell_button_clicked(int cell) {
             //ui->backMoveButton->setEnabled(true);
             number_button_clicked(answer[cell / 10][cell % 10] - 1);
             current_number = answer[cell / 10][cell % 10];
-            std::cout << "left " << playersfield->GetEmptyCellsNumber() << '\n';
             if (playersfield->GetEmptyCellsNumber() == 0)
                 finish_game();
             request = false;
@@ -275,7 +292,6 @@ void mainwindow::cell_button_clicked(int cell) {
                 ui->backMoveButton->setEnabled(true);
             }
             number_button_clicked(current_number - 1);
-            std::cout << "left " << playersfield->GetEmptyCellsNumber() << std::endl;
             if (playersfield->GetEmptyCellsNumber() == 0)
                 finish_game();
             request = false;
@@ -348,6 +364,54 @@ void mainwindow::number_button_clicked(int number) {
         }
         SetColorButtons();
         DisplayField();
+        return;
+    }
+    if(author_field)
+    {
+        if(previous_cell == -1)
+        {
+            return;
+        }
+
+        int k = playersfield->SetAuthorCell(previous_cell / 10, previous_cell % 10, value);
+        notes = playersfield->GetNotes();
+        int x = previous_cell / 10, y = previous_cell % 10;
+        if(notes[x][y] == 0)
+        {
+            field_buttons[x][y]->setText("");
+        }
+        for(int v = 1; v <= 9; v ++)
+        {
+            if((notes[x][y] >> v) & 1)
+            {
+                field_buttons[x][y]->setText(QString::number(v));
+                break;
+            }
+        }
+        ui->label->show();
+        if(k == -1)
+        {
+            ui->label->setText("Поле не имеет решений");
+            ui->pushButton->hide();
+        }
+        if(k == 0)
+        {
+            ui->label->setText("Поле не имеет решений");
+            ui->pushButton->hide();
+        }
+        else
+        {
+            if(k == 1)
+            {
+                ui->label->setText("Поле имеет одно решение");
+                ui->pushButton->show();
+            }
+            else
+            {
+                ui->label->setText("Поле имеет больше одного решения");
+                ui->pushButton->hide();
+            }
+        }
         return;
     }
     for (int i = 0; i < 9; i++) {
@@ -450,6 +514,7 @@ void mainwindow::DisplayField() {
                 }
             } else {
                 if (notes[i][j] == 0) {
+                    field_buttons[i][j]->setFont(font32);
                     field_buttons[i][j]->setText("");
                 } else {
                     field_buttons[i][j]->setFont(font11);
@@ -514,7 +579,7 @@ QString mainwindow::GetBorder(int i, int j) {
 }
 
 void mainwindow::change_pencil_button_clicked() {
-    playersfield->SetPencil();
+    playersfield->SetPencil(pencil^1);
     if (pencil == 0)
         ui->changePencilButton->setIcon(QIcon("../Pictures/pencil.png"));
     else
@@ -594,24 +659,42 @@ void mainwindow::clever_hint_button_clicked() {
     timer->stop();
     int type = playersfield->GetCleverHint();
     ui->cleverHintWidget->show();
+    clever_hint_left --;
+    if(clever_hint_left == 0)
+        ui->cleverHintButton->setEnabled(0);
     ui->gameWidget->setEnabled(0);
     if(type == -1)
     {
-        std::cout << "loh\n";
+        ui->picture_hint_label->hide();
+        ui->text_hint_label->setText("Ваши заметки некорректны. Попробуйте еще :)");
+        ui->text_hint_label->setWordWrap(true);
         return;
     }
     if(type == 0)
     {
-        std::cout << "loh x2\n";
+        ui->picture_hint_label->hide();
+        ui->text_hint_label->setText("Подсказка вам не поможет. Попробуйте изучить более сложные методы :)");
+        ui->text_hint_label->setWordWrap(true);
+        return;
     }
-    std::cout << type << '\n';
+    ui->picture_hint_label->show();
     QString picture_path = "../Pictures/Hints/" + QString::number(type) + ".png";
     QPixmap pixmap(picture_path);
     pixmap = pixmap.scaled(ui->picture_hint_label->width(), ui->picture_hint_label->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     ui->picture_hint_label->setPixmap(pixmap);
+    QString text_path = "../Texts/Hints/" + QString::number(type) + ".txt";
+    QFile file(text_path);
+    if (file.open(QFile::ReadOnly | QFile::Text)) {
+        QTextStream in(&file);
+        QString text = in.readAll();
+        file.close();
+        ui->text_hint_label->setText(text);
+        ui->text_hint_label->setWordWrap(true);
+    }
+    file.close();
+
 
 }
-
 
 void mainwindow::increase_time() {
     s++;
@@ -669,8 +752,9 @@ void mainwindow::to_main_window_clicked() {
             field_buttons[i][j]->setText("");
         }
     }
-    SetColorButtons();
-    DisplayField();
+    author_field = false;
+    //SetColorButtons();
+    //DisplayField();
 }
 
 void mainwindow::lose_game() {
@@ -756,7 +840,7 @@ void mainwindow::close_rules_button_clicked() {
 }
 
 void mainwindow::increase_page_number() {
-    if(current_page + 1 > 2)
+    if(current_page + 1 > 1)
         return;
     current_page ++;
     DisplayRules();
@@ -785,6 +869,40 @@ void mainwindow::close_hint_button_clicked() {
     ui->cleverHintWidget->hide();
     timer->start();
     ui->gameWidget->setEnabled(true);
+}
+
+void mainwindow::start_create_button_clicked() {
+    author_field = true;
+    ui->backMoveButton->hide();
+    ui->show_mistakes_label->hide();
+    ui->timer_label->hide();
+    ui->fastPencilButton->hide();
+    ui->changePencilButton->hide();
+    ui->hintButton->hide();
+    ui->cleverHintButton->hide();
+    ui->mainMenuWidget->hide();
+    ui->gameWidget->show();
+    ui->newGameButton_1->setEnabled(0);
+    ui->newGameButton_2->setEnabled(0);
+    ui->newGameButton_6->setEnabled(0);
+    ui->gameWidget->setEnabled(true);
+    for(int i = 0; i < 9; i ++)
+    {
+        for(int j = 0; j < 9; j ++)
+        {
+            QString style =
+                    "text-align: center; background-color:rgba(255, 255, 255, 0); border-style: solid; border-width: " +
+                    GetBorder(i, j) + " border-color: black;";
+            field_buttons[i][j]->setStyleSheet(style);
+        }
+    }
+    pencil = false;
+    playersfield = new PlayersField(0, 0, 0);
+    playersfield->clear();
+    author_field = true;
+    playersfield->SetPencil(0);
+    notes = playersfield->GetNotes();
+    DisplayField();
 }
 
 

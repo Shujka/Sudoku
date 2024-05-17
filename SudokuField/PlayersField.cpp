@@ -37,8 +37,8 @@ void PlayersField::FillBaseNotes() {
     }
 }
 
-void PlayersField::SetPencil() {
-    pencil ^= 1;
+void PlayersField::SetPencil(bool type) {
+    pencil = type;
 }
 
 // 0 - pencil, try to write at filled, change number
@@ -49,15 +49,7 @@ int PlayersField::TryAdd(int i, int j, int number) {
     // 1 - done what expected
     // 2 - not changed pencil mistake
     // 3 - mistake in filling with pen
-    std::cout << "tryadd\n";
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
-            std::cout << field[i][j] << " ";
-        }
-    }
-    std::cout << '\n';
-    std::cout << " i " << i << " " << j << " " << field[i][j] << " number " << number << " answer " << answer[i][j]
-              << '\n';
+
     if (pencil) {
         // pencil
         // every move is correct
@@ -90,7 +82,6 @@ int PlayersField::TryAdd(int i, int j, int number) {
             return 1;
         } else {
             check[i][j] = 0;
-            std::cout << "bad note. obvious mistake\n";
             return 2;
         }
     } else {
@@ -174,7 +165,6 @@ void PlayersField::GetFastNotes() {
 }
 
 void PlayersField::SetCell(int row, int column, int value) {
-    std::cout << "ok set cell " << row << " " << column << " value " << value << '\n';
     if (value & 1) {
         // not empty cell
         for (int i = 1; i < 9; i++) {
@@ -187,12 +177,7 @@ void PlayersField::SetCell(int row, int column, int value) {
         field[row][column] = 0;
     }
     players_notes[row][column] = value;
-    for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
-            std::cout << field[i][j];
-        }
-        std::cout << '\n';
-    }
+
 //    exit(0);
 }
 
@@ -272,7 +257,6 @@ int PlayersField::GetSimpleHint() {
 
 int PlayersField::GetEmptyCellsNumber() {
     int ans = 0;
-    std::cout << '\n';
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (!field[i][j])
@@ -317,7 +301,6 @@ int PlayersField::GetCleverHint() {
                 break;
         }
         if (candidate == 1){
-            std::cout << "ok 320 in " << i << '\n';
             return 1;
         }
     }
@@ -331,7 +314,6 @@ int PlayersField::GetCleverHint() {
             }
         }
         if (candidate == 1) {
-            std::cout << "ok 334 in " << j << '\n';
             return 1;
         }
     }
@@ -347,7 +329,6 @@ int PlayersField::GetCleverHint() {
                 }
             }
             if (candidate == 1) {
-                std::cout << "ok 350 in " << x + 1 << " " << y + 1 << '\n';
                 return 1;
             }
         }
@@ -370,7 +351,6 @@ int PlayersField::GetCleverHint() {
             }
             for (int value = 1; value <= 9; value++) {
                 if (a[value] == 1) {
-                    std::cout << "ok in 373 " << x << " " << y << " " << value << '\n';
                     return 2;
                 }
             }
@@ -381,7 +361,6 @@ int PlayersField::GetCleverHint() {
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (__builtin_popcount(notes[i][j]) == 1) {
-                std::cout << "ok 384 " << i << " " << j << '\n';
                 return 3;
             }
         }
@@ -391,7 +370,6 @@ int PlayersField::GetCleverHint() {
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (__builtin_popcount(players_notes[i][j]) == 1) {
-                std::cout << "ok 394 " << i << " " << j << '\n';
                 return 4;
             }
         }
@@ -406,7 +384,6 @@ int PlayersField::GetCleverHint() {
                 for (int j = 0; j < 9; j++) {
                     if (field[i][j] == 0 && __builtin_popcount(players_notes[i][j]) == 2) {
                         pairs.push_back(players_notes[i][j]);
-                        std::cout << "ok i " << i << " " << j << " " << players_notes[i][j] << '\n';
                     }
                     if (field[i][j] == 0) {
                         for (int value = 1; value <= 9; value++) {
@@ -416,19 +393,12 @@ int PlayersField::GetCleverHint() {
                     }
                 }
             }
-            std::cout << "finish\n";
             sort(pairs.begin(), pairs.end());
             for (int i = 1; i < pairs.size(); i++) {
                 if (pairs[i] == pairs[i - 1]) {
                     for (int value = 1; value <= 9; value++) {
                         if (((pairs[i] >> value) & 1) && all_variants[value] > 2) {
-                            std::cout << "ok 423 x " << x + 1 << " y " << y + 1 << " ";
-                            for (int vv = 1; vv <= 9; vv ++)
-                            {
-                                if((pairs[i] >> vv) & 1)
-                                    std::cout << vv << " ";
-                            }
-                            std::cout << '\n';
+
                             return 5;
                         }
                     }
@@ -455,13 +425,7 @@ int PlayersField::GetCleverHint() {
             if (pairs[j] == pairs[j - 1]) {
                 for (int value = 1; value <= 9; value++) {
                     if (((pairs[j] >> value) & 1) && all_variants[value] > 2) {
-                        std::cout << " ok 458 i " << i + 1 << " ";
-                        for (int vv = 1; vv <= 9; vv ++)
-                        {
-                            if((pairs[j] >> vv) & 1)
-                                std::cout << vv << " ";
-                        }
-                        std::cout << '\n';
+
                         return 5;
                     }
                 }
@@ -487,13 +451,7 @@ int PlayersField::GetCleverHint() {
             if (pairs[i] == pairs[i - 1]) {
                 for (int value = 1; value <= 9; value++) {
                     if (((pairs[i] >> value) & 1) && all_variants[value] > 2) {
-                        std::cout << " ok 490 i " << i + 1 << " ";
-                        for (int vv = 1; vv <= 9; vv ++)
-                        {
-                            if((pairs[i] >> vv) & 1)
-                                std::cout << vv << " ";
-                        }
-                        std::cout << '\n';
+
                         return 5;
                     }
                 }
@@ -504,4 +462,54 @@ int PlayersField::GetCleverHint() {
     return 0;
     // search for obvious triples
 
+}
+
+void PlayersField::clear() {
+    for(int i = 0; i < 9; i ++)
+    {
+        for(int j = 0; j < 9; j ++)
+        {
+            field[i][j] = 0;
+            players_notes[i][j] = 0;
+        }
+    }
+    players_game = true;
+}
+
+int PlayersField::SetAuthorCell(int row, int column, int value) {
+    if(field[row][column] == value)
+    {
+        field[row][column] = 0;
+        players_notes[row][column] = 0;
+    }
+    else
+    {
+        field[row][column] = value;
+        players_notes[row][column] = (1 << value) + 1;
+    }
+    FillCheck();
+    if(IsValid(row, column)) {
+        FillCheck();
+        FillAllCandidates();
+        int t = IsSolvable();
+        return t;
+    }
+    else
+    {
+        field[row][column] = 0;
+        players_notes[row][column] = 0;
+        return -1;
+    }
+}
+
+void PlayersField::PrepareGame() {
+    FillCheck();
+    Solve();
+    notes = new int *[9];
+    players_notes = new int *[9];
+    for (int i = 0; i < 9; i++) {
+        notes[i] = new int[9];
+        players_notes[i] = new int[9];
+    }
+    FillBaseNotes();
 }

@@ -114,6 +114,8 @@ private slots:
     void clever_hint_button_clicked();
 
     void close_hint_button_clicked();
+
+    void start_create_button_clicked();
 };
 
 
